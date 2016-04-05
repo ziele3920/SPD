@@ -4,9 +4,9 @@ namespace Schrage
 {
     class TaskService
     {
-        public List<Task> ReadData(string filename)
+        public PriorityQueue<int, Task> ReadData(string filename)
         {
-            List<Task> data = new List<Task>();
+            PriorityQueue<int, Task> data = new PriorityQueue<int, Task>();
             string directory = System.IO.Directory.GetCurrentDirectory();
             string[] lines = System.IO.File.ReadAllLines(directory + "\\" + filename);
 
@@ -17,7 +17,7 @@ namespace Schrage
                 currentTask.r = int.Parse(line[0]);
                 currentTask.t = int.Parse(line[1]);
                 currentTask.q = int.Parse(line[2]);
-                data.Add(currentTask);
+                data.Enqueue(currentTask.r, currentTask);
             }
             return data;
         }

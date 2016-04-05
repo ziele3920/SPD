@@ -11,7 +11,6 @@ namespace Schrage
         public int r; //czs dostępności
         public int t; //czas trwania
         public int q; //czas dostarczenia
-
         public Task(Task task)
         {
             r = task.r;
@@ -33,15 +32,15 @@ namespace Schrage
                 UnreadyTaskQueue unready = new UnreadyTaskQueue(TS.ReadData(filename));
                 Console.WriteLine("sorted data");
                 unready.Display();
-
-                int time = unready.GetFirst().r;
+       
+                int time = unready.GetROfFirstTask();
                 int finishTime = 0;
                 ReadyTaskQueue ready = new ReadyTaskQueue();
 
-                while(unready.getLength() > 0 || ready.getLength() >0)
+                while(!unready.IsEmpty() || !ready.IsEmpty())
                 {
                     ready.Add(unready.GetTasksReadyAt(time));
-                    if (ready.getLength() > 0)
+                    if (!ready.IsEmpty())
                     {
                         Task task = ready.eraseFirst();
                         finishTime = Math.Max(finishTime, task.t + time + task.q);

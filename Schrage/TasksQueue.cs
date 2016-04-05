@@ -5,143 +5,102 @@ namespace Schrage
 {
     public class UnreadyTaskQueue
     {
-        List<Task> list;
+        PriorityQueue<int, Task> list;
 
-        public int getLength()
+        public bool IsEmpty()
         {
-            return list.Count;
+            return list.IsEmpty;
         }
 
         public Task eraseFirst()
         {
-            Task t = new Task(list[0]);
-            list.RemoveAt(0);
-            return t;
+            return list.Dequeue();
         }
 
-        public Task GetFirst()
+        public int GetROfFirstTask()
         {
-            return list[0];
+            Task t = list.Dequeue();
+            int time = t.r;
+            list.Enqueue(t.r, t);
+            return time;
         }
-
-        public List<Task> GetTasksReadyAt(int time)
-        {
-                    
-
-            List<Task> ready = new List<Task>();
-            for(int i = 0; i < list.Count; ++i)
+        public Queue<Task> GetTasksReadyAt(int time)
+        { 
+            Queue<Task> ready = new Queue<Task>();
+            while(!list.IsEmpty)
             {
                 //Console.WriteLine("WSZEDŁ");
-                Task ts = list[i];
+                Task ts = list.Dequeue();
                 Console.WriteLine("task r "+ ts.r + " dla t " + time);
                 if (ts.r <= time)
                 {
-                    Task task = new Task(ts);
-                    ready.Add(task);
-                    if(list.Count == 1)
-                    {
-                        list.RemoveAt(0);
-                        break;
-                    }
+                    ready.Enqueue(ts);
                 }
                 else
                 {
-                    // Console.WriteLine(i);
-                    //int removeRange;
-                    //if (i == 0)
-                    //    removeRange = 1;
-                    //else if (i == list.Count)
-                    //    removeRange = list.Count;
-                    //else
-                    //    removeRange = i;
-                    //Console.WriteLine("przed");
-                    //Display();
-                    //Console.WriteLine("po");
-                    list.RemoveRange(0, i);
-                    //Display();
-                    //Console.WriteLine("usuwam od 0 do " + (i) + "dla t = " + time + "na liscie zostaje " + list.Count);
+                    list.Enqueue(ts.r, ts);
                     break;
                 }
             }
             return ready;
         }
 
-        public void Add(Task newTask)
-        {
-            list.Add(newTask);
-            list.Sort((t1, t2) => t1.r.CompareTo(t2.r));
-        }
-
-        public UnreadyTaskQueue()
-        {
-            list = new List<Task>();
-        }
-
-        public UnreadyTaskQueue(List<Task> newList)
+        public UnreadyTaskQueue(PriorityQueue<int, Task> newList)
         {
             list = newList;
-            list.Sort((t1, t2) => t1.r.CompareTo(t2.r));
         }
 
         public void Display()
         {
-            foreach (Task t in list)
+            PriorityQueue<int, Task> diplayed = new PriorityQueue<int, Task>();
+            while (!list.IsEmpty)
+            {
+                Task t = list.Dequeue();
                 Console.WriteLine(t.r + " " + t.t + " " + t.q);
+                diplayed.Enqueue(t.r, t);
+            }
+            list = diplayed;
         }
-
     }
 
     public class ReadyTaskQueue
     {
-        List<Task> list;
-
-        public int getLength()
-        {
-            return list.Count;
-        }
+        PriorityQueue<int, Task> list;
 
         public Task eraseFirst()
         {
-            Display();
-            Task t = list[0];
-            list.RemoveAt(0);
-            return t;
+            return list.Dequeue();
         }
 
-        public Task GetFirst()
+        public void Add(Queue<Task> tQueue)
         {
-            return list[0];
-        }
-
-        public void Add(Task newTask)
-        {
-            list.Add(newTask);
-            list.Sort((t1, t2) => -t1.q.CompareTo(t2.q));
-        }
-
-        public void Add(List<Task> tList)
-        {
-            list.AddRange(tList);
-            list.Sort((t1, t2) => -t1.q.CompareTo(t2.q));
-        }
-
-        public ReadyTaskQueue()
-        {
-            list = new List<Task>();
-        }
-
-        public ReadyTaskQueue(List<Task> newList)
-        {
-            list = newList;
-            list.Sort((t1, t2) => -t1.q.CompareTo(t2.q));
+            while (tQueue.Count > 0)
+            {
+                Task t = tQueue.Dequeue();
+                list.Enqueue(-t.q, t);
+            }
         }
 
         public void Display()
         {
-            foreach (Task t in list)
+            PriorityQueue<int, Task> diplayed = new PriorityQueue<int, Task>();
+            while (!list.IsEmpty)
+            {
+                Task t = list.Dequeue();
                 Console.WriteLine(t.r + " " + t.t + " " + t.q);
+                diplayed.Enqueue(t.r, t);
+            }
+            list = diplayed;
+        }
+        public bool IsEmpty()
+        {
+            return list.IsEmpty;
         }
 
+        public ReadyTaskQueue()
+        {
+            list = new PriorityQueue<int, Task>();
+        }
     }
 }
 
