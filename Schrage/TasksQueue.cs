@@ -31,7 +31,7 @@ namespace Schrage
             {
                 //Console.WriteLine("WSZEDŁ");
                 Task ts = list.Dequeue();
-                Console.WriteLine("task r "+ ts.r + " dla t " + time);
+                //Console.WriteLine("task r "+ ts.r + " dla t " + time);
                 if (ts.r <= time)
                 {
                     ready.Enqueue(ts);

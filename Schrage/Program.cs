@@ -30,8 +30,8 @@ namespace Schrage
                 Console.WriteLine("podaj nazwe pliku");
                 string filename = Console.ReadLine();
                 UnreadyTaskQueue unready = new UnreadyTaskQueue(TS.ReadData(filename));
-                Console.WriteLine("sorted data");
-                unready.Display();
+                //Console.WriteLine("sorted data");
+                //unready.Display();
        
                 int time = unready.GetROfFirstTask();
                 int finishTime = 0;
@@ -46,6 +46,8 @@ namespace Schrage
                         finishTime = Math.Max(finishTime, task.t + time + task.q);
                         time = task.t + time; continue;
                     }
+                    if (ready.IsEmpty())
+                        ++time;
                 }
 
                 Console.WriteLine("\nfinsh at");
