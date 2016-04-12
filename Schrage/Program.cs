@@ -1,28 +1,26 @@
 ﻿using System;
 using System.Collections;
-//using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace Schrage
 {
-    public struct Task
+    public class Task
     {
         public int r; //czs dostępności
         public int t; //czas trwania
         public int q; //czas dostarczenia
-        public Task(Task task)
-        {
-            r = task.r;
-            t = task.t;
-            q = task.q;
-        }
+        public int startTime; //czas rozpoczecia wykonywania zdania
+
     }
+
     class Program
     {
         static void Main(string[] args)
         {
             TaskService TS = new TaskService();
+            List<Task> schrager = new List<Task>();
 
             while (true)
             {
@@ -43,11 +41,13 @@ namespace Schrage
                     if (!ready.IsEmpty())
                     {
                         Task task = ready.eraseFirst();
+                        task.startTime = time;
+                        schrager.Add(task);
                         finishTime = Math.Max(finishTime, task.t + time + task.q);
                         time = task.t + time; continue;
                     }
                     if (ready.IsEmpty())
-                        ++time;
+                        time = unready.GetROfFirstTask();
                 }
 
                 Console.WriteLine("\nfinsh at");

@@ -46,6 +46,7 @@
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TasksBlock.cs" />
     <Compile Include="TaskService.cs" />
     <Compile Include="TasksQueue.cs" />
   </ItemGroup>
