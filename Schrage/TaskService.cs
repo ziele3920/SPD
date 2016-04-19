@@ -24,39 +24,43 @@ namespace Schrage
             return data;
         }
 
-        public List<TasksBlock> Split(List<Task> tasks)
+        public TasksBlock Split(List<Task> tasks)
         {
-            int finishTime = 0;
-            Task b = null;
-            List<TasksBlock> blocksList = new List<TasksBlock>();
-            List<Task> block = new List<Task>();
-            Task lastTask = tasks[0];
-            block.Add(lastTask);
+            
+            Task lastTask = tasks[tasks.Count-1];
+            int finishTime = lastTask.startTime + lastTask.t + lastTask.q;
+            TasksBlock block = new TasksBlock();
+            block.block.Add(lastTask);
+            block.b = lastTask;
+            int qb = lastTask.q;
+            bool cWasFound = false;
 
-            for(int i = 1; i < tasks.Count; ++i)
+            for (int i = tasks.Count-2; i > -1; --i)
             {
-                if (tasks[i].startTime == lastTask.startTime + lastTask.t)
+                if (tasks[i].startTime + tasks[i].t == lastTask.startTime)
                 {
                     lastTask = tasks[i];
-                    block.Add(lastTask);
+                    block.block.Insert(0, lastTask);
                     if(finishTime < lastTask.startTime+lastTask.t + lastTask.q)
                     {
                         finishTime = lastTask.startTime + lastTask.t + lastTask.q;
-                        b = lastTask;
+                        block.b = lastTask;
+                    }
+                    if (!cWasFound && lastTask.q < qb)
+                    {
+                        block.c = lastTask;
+                        cWasFound = true;
                     }
 
                 }
                 else
                 {
-                    blocksList.Add(new TasksBlock(block, b));
-                    block = new List<Task>();
-                    lastTask = tasks[i];
-                    block.Add(lastTask);
-                    finishTime = 0;
+                    block.a = lastTask;
+                    return block;
                 }
 
             }
-            return blocksList;
+            return null;
         }
 
     }
