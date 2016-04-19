@@ -19,40 +19,67 @@ namespace Schrage
     {
         static void Main(string[] args)
         {
-            TaskService TS = new TaskService();
-            List<Task> schrager = new List<Task>();
 
+            TaskService TS = new TaskService();
             while (true)
             {
 
                 Console.WriteLine("podaj nazwe pliku");
                 string filename = Console.ReadLine();
+                List<Task> schrager = new List<Task>();
+
+
+
                 UnreadyTaskQueue unready = new UnreadyTaskQueue(TS.ReadData(filename));
                 //Console.WriteLine("sorted data");
                 //unready.Display();
-       
-                int time = unready.GetROfFirstTask();
-                int finishTime = 0;
-                ReadyTaskQueue ready = new ReadyTaskQueue();
 
-                while(!unready.IsEmpty() || !ready.IsEmpty())
-                {
-                    ready.Add(unready.GetTasksReadyAt(time));
-                    if (!ready.IsEmpty())
-                    {
-                        Task task = ready.eraseFirst();
-                        task.startTime = time;
-                        schrager.Add(task);
-                        finishTime = Math.Max(finishTime, task.t + time + task.q);
-                        time = task.t + time; continue;
-                    }
-                    if (ready.IsEmpty())
-                        time = unready.GetROfFirstTask();
-                }
+                Carier(unready, int.MaxValue);
 
-                Console.WriteLine("\nfinsh at");
-                Console.WriteLine(finishTime);
             }
+        }
+
+        static int Carier(UnreadyTaskQueue unready, int UB)
+        {
+            TaskService TS = new TaskService();
+            List<Task> schrager = new List<Task>();
+            int U = Schrage(unready, schrager);
+            if (U < UB)
+                UB = U;
+            TasksBlock lastBlock = TS.Split(schrager);
+            if (lastBlock.c == null)
+                return UB;
+            lastBlock.c.r = Math.Max(lastBlock.c.r, TS.FindMinR(lastBlock) + TS.FindSumP(lastBlock));
+
+            return 0;
+
+
+        }
+
+        private static int Schrage(UnreadyTaskQueue unready, List<Task> schrager)
+        {
+            int time = unready.GetROfFirstTask();
+            int finishTime = 0;
+            ReadyTaskQueue ready = new ReadyTaskQueue();
+
+            while (!unready.IsEmpty() || !ready.IsEmpty())
+            {
+                ready.Add(unready.GetTasksReadyAt(time));
+                if (!ready.IsEmpty())
+                {
+                    Task task = ready.eraseFirst();
+                    task.startTime = time;
+                    schrager.Add(task);
+                    finishTime = Math.Max(finishTime, task.t + time + task.q);
+                    time = task.t + time; continue;
+                }
+                if (ready.IsEmpty())
+                    time = unready.GetROfFirstTask();
+            }
+
+            Console.WriteLine("\nfinsh at");
+            Console.WriteLine(finishTime);
+            return finishTime;
         }
     }
 }

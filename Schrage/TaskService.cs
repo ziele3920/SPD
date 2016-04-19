@@ -26,8 +26,8 @@ namespace Schrage
 
         public TasksBlock Split(List<Task> tasks)
         {
-            
-            Task lastTask = tasks[tasks.Count-1];
+
+            Task lastTask = tasks[tasks.Count - 1];
             int finishTime = lastTask.startTime + lastTask.t + lastTask.q;
             TasksBlock block = new TasksBlock();
             block.block.Add(lastTask);
@@ -35,13 +35,13 @@ namespace Schrage
             int qb = lastTask.q;
             bool cWasFound = false;
 
-            for (int i = tasks.Count-2; i > -1; --i)
+            for (int i = tasks.Count - 2; i > -1; --i)
             {
                 if (tasks[i].startTime + tasks[i].t == lastTask.startTime)
                 {
                     lastTask = tasks[i];
                     block.block.Insert(0, lastTask);
-                    if(finishTime < lastTask.startTime+lastTask.t + lastTask.q)
+                    if (finishTime < lastTask.startTime + lastTask.t + lastTask.q)
                     {
                         finishTime = lastTask.startTime + lastTask.t + lastTask.q;
                         block.b = lastTask;
@@ -63,5 +63,39 @@ namespace Schrage
             return null;
         }
 
+        public int FindMinR(TasksBlock block)
+        {
+            int min = int.MaxValue;
+            for (int i = block.block.IndexOf(block.c) + 1; i < block.block.IndexOf(block.b); ++i)
+            {
+                int currentR = block.block[i].r;
+                if (currentR < min)
+                    min = currentR;
+            }
+            return min;
+        }
+
+        public int FindMinQ(TasksBlock block)
+        {
+            int min = int.MaxValue;
+            for (int i = block.block.IndexOf(block.c) + 1; i < block.block.IndexOf(block.b); ++i)
+            {
+                int currentQ = block.block[i].q;
+                if (currentQ < min)
+                    min = currentQ;
+            }
+            return min;
+        }
+
+        public int FindSumP(TasksBlock block)
+        {
+            int sum = 0;
+            for (int i = block.block.IndexOf(block.c) + 1; i < block.block.IndexOf(block.b); ++i)
+            {
+                sum += block.block[i].t;
+            }
+            return sum;
+
+        }
     }
 }
