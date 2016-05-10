@@ -44,7 +44,10 @@ namespace Schrage
                     if (finishTime < lastTask.startTime + lastTask.t + lastTask.q)
                     {
                         finishTime = lastTask.startTime + lastTask.t + lastTask.q;
+                        qb = lastTask.q;
                         block.b = lastTask;
+                        block.c = null;
+                        cWasFound = false;
                     }
                     if (!cWasFound && lastTask.q < qb)
                     {
