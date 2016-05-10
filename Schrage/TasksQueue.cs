@@ -45,6 +45,36 @@ namespace Schrage
             return ready;
         }
 
+        public Queue<Task> GetTasksReadyAt(ref int time, Task currentTask, ReadyTaskQueue currentReady)
+        {
+            Queue<Task> ready = new Queue<Task>();
+            while (!list.IsEmpty)
+            {
+                //Console.WriteLine("WSZEDŁ");
+                Task ts = list.Dequeue();
+                //Console.WriteLine("task r "+ ts.r + " dla t " + time);
+                if (ts.r <= time)
+                {
+                    ready.Enqueue(ts);
+                    if(currentTask != null && ts.q > currentTask.q)
+                    {
+                        Console.WriteLine("task r " + ts.r + " dla t " + time);
+                        currentTask.t = time - ts.r;
+                        time = ts.r;
+                        Console.WriteLine("task r " + ts.r + " dla t " + time );
+                        if (currentTask != null && currentTask.t > 0)
+                           currentReady.Add(currentTask);
+                    }
+                }
+                else
+                {
+                    list.Enqueue(ts.r, ts);
+                    break;
+                }
+            }
+            return ready;
+        }
+
         public UnreadyTaskQueue(PriorityQueue<int, Task> newList)
         {
             list = newList;
@@ -70,6 +100,11 @@ namespace Schrage
         public Task eraseFirst()
         {
             return list.Dequeue();
+        }
+
+        public void Add(Task task)
+        {
+            list.Enqueue(-task.q, task);
         }
 
         public void Add(Queue<Task> tQueue)

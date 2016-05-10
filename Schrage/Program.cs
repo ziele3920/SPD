@@ -33,8 +33,8 @@ namespace Schrage
                 UnreadyTaskQueue unready = new UnreadyTaskQueue(TS.ReadData(filename));
                 //Console.WriteLine("sorted data");
                 //unready.Display();
-
-                Carier(unready, int.MaxValue);
+                SchragePodz(unready, schrager);
+                //Carier(unready, int.MaxValue);
 
             }
         }
@@ -80,6 +80,38 @@ namespace Schrage
             Console.WriteLine("\nfinsh at");
             Console.WriteLine(finishTime);
             return finishTime;
+        }
+
+        private static int SchragePodz(UnreadyTaskQueue unready, List<Task> schrager)
+        {
+
+            int time = unready.GetROfFirstTask();
+            int finishTime = 0;
+            ReadyTaskQueue ready = new ReadyTaskQueue();
+            Task task = null;
+
+            while (!unready.IsEmpty() || !ready.IsEmpty())
+            {
+                ready.Add(unready.GetTasksReadyAt(ref time, task, ready));
+
+                if (!ready.IsEmpty())
+                {
+                    task = ready.eraseFirst();
+                    task.startTime = time;
+                    //schrager.Add(task);
+                    finishTime = Math.Max(finishTime, task.t + time + task.q);
+                    time = task.t + time; continue;
+                }
+
+                if (ready.IsEmpty())
+                    time = unready.GetROfFirstTask();
+
+            }
+
+            Console.WriteLine("\nfinsh at");
+            Console.WriteLine(finishTime);
+            return finishTime;
+            
         }
     }
 }
