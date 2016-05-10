@@ -58,10 +58,8 @@ namespace Schrage
                     ready.Enqueue(ts);
                     if(currentTask != null && ts.q > currentTask.q)
                     {
-                        Console.WriteLine("task r " + ts.r + " dla t " + time);
                         currentTask.t = time - ts.r;
                         time = ts.r;
-                        Console.WriteLine("task r " + ts.r + " dla t " + time );
                         if (currentTask != null && currentTask.t > 0)
                            currentReady.Add(currentTask);
                     }

@@ -33,7 +33,7 @@ namespace Schrage
                 UnreadyTaskQueue unready = new UnreadyTaskQueue(TS.ReadData(filename));
                 //Console.WriteLine("sorted data");
                 //unready.Display();
-                SchragePodz(unready, schrager);
+                SchragePodz(unready);
                 //Carier(unready, int.MaxValue);
 
             }
@@ -82,7 +82,7 @@ namespace Schrage
             return finishTime;
         }
 
-        private static int SchragePodz(UnreadyTaskQueue unready, List<Task> schrager)
+        private static int SchragePodz(UnreadyTaskQueue unready)
         {
 
             int time = unready.GetROfFirstTask();
