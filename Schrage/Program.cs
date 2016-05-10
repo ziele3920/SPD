@@ -33,8 +33,8 @@ namespace Schrage
                 UnreadyTaskQueue unready = new UnreadyTaskQueue(TS.ReadData(filename));
                 //Console.WriteLine("sorted data");
                 //unready.Display();
-                SchragePodz(unready);
-                //Carier(unready, int.MaxValue);
+                //SchragePodz(unready);
+                Carier(unready, int.MaxValue);
 
             }
         }
@@ -43,15 +43,35 @@ namespace Schrage
         {
             TaskService TS = new TaskService();
             List<Task> schrager = new List<Task>();
+            int LB, q, rp, qp, pp;
             int U = Schrage(unready, schrager);
+            unready = new UnreadyTaskQueue(schrager);
             if (U < UB)
                 UB = U;
             TasksBlock lastBlock = TS.Split(schrager);
             if (lastBlock.c == null)
                 return UB;
-            lastBlock.c.r = Math.Max(lastBlock.c.r, TS.FindMinR(lastBlock) + TS.FindSumP(lastBlock));
+            rp = TS.FindMinR(lastBlock);
+            pp = TS.FindSumP(lastBlock);
+            qp = TS.FindMinQ(lastBlock);
 
-            return 0;
+            lastBlock.c.r = Math.Max(lastBlock.c.r, rp + pp); //sprwadzic jak nie dziala
+            int copyR = lastBlock.c.r;
+            LB = SchragePodz(unready);
+            unready = new UnreadyTaskQueue(schrager);
+            if (LB < UB)
+                Carier(unready, UB);
+            lastBlock.c.r = copyR;
+
+            lastBlock.c.q = Math.Max(lastBlock.c.q, qp + pp);
+            int copyQ = lastBlock.c.q;
+            LB = SchragePodz(unready);
+            unready = new UnreadyTaskQueue(schrager);
+            if (LB < UB)
+                Carier(unready, UB);
+            lastBlock.c.q = copyQ;
+
+            return -1;
 
 
         }

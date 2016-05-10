@@ -63,7 +63,10 @@ namespace Schrage
                 }
 
             }
-            return null;
+            if (block.a == null)
+                block.a = lastTask;
+
+            return block;
         }
 
         public int FindMinR(TasksBlock block)
