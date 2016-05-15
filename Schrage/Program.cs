@@ -33,6 +33,7 @@ namespace Schrage
                 UnreadyTaskQueue unready = new UnreadyTaskQueue(TS.ReadData(filename));
                 //Console.WriteLine("sorted data");
                 //unready.Display();
+                //Schrage(unready, schrager);
                 //SchragePodz(unready);
                 Carier(unready, int.MaxValue);
 
@@ -61,10 +62,12 @@ namespace Schrage
             unready = new UnreadyTaskQueue(schrager);
             if (LB < UB)
                 Carier(unready, UB);
+            unready = new UnreadyTaskQueue(schrager);
             lastBlock.c.r = copyR;
 
             lastBlock.c.q = Math.Max(lastBlock.c.q, qp + pp);
             int copyQ = lastBlock.c.q;
+
             LB = SchragePodz(unready);
             unready = new UnreadyTaskQueue(schrager);
             if (LB < UB)
