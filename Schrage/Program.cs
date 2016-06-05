@@ -28,9 +28,6 @@ namespace Schrage
                 string filename = Console.ReadLine();
                 //string filename = "SCHRAGE6.DAT";
 
-                List<Task> schrager = new List<Task>();
-
-
                 UnreadyTaskQueue unready = new UnreadyTaskQueue(TS.ReadData(filename));
                 //Console.WriteLine("sorted data");
                 //unready.Display();
@@ -46,9 +43,10 @@ namespace Schrage
         {
             TaskService TS = new TaskService();
             List<Task> schrager = new List<Task>();
-            int LB, q, rp, qp, pp;
-            int U = Schrage(unready, schrager);
-            unready = new UnreadyTaskQueue(schrager);
+            List<Task> tasksList = unready.ToList();
+
+            int LB, rp, qp, pp;
+            int U = Schrage(tasksList, schrager);
             if (U < UB)
                 UB = U;
             TasksBlock lastBlock = TS.Split(schrager);
@@ -60,36 +58,30 @@ namespace Schrage
 
             int copyR = lastBlock.c.r;
             lastBlock.c.r = Math.Max(lastBlock.c.r, rp + pp); //sprwadzic jak nie dziala
-            unready = new UnreadyTaskQueue(schrager);
 
-            LB = SchragePodz(unready);
-            unready = new UnreadyTaskQueue(schrager);
+            LB = SchragePodz(tasksList);
             if (LB < UB)
                 UB = Carier(unready, UB);
             lastBlock.c.r = copyR;
-            unready = new UnreadyTaskQueue(schrager);
-
 
             int copyQ = lastBlock.c.q;
             lastBlock.c.q = Math.Max(lastBlock.c.q, qp + pp);
-            unready = new UnreadyTaskQueue(schrager);
 
-            LB = SchragePodz(unready);
-            unready = new UnreadyTaskQueue(schrager);
+            LB = SchragePodz(tasksList);
             if (LB < UB)
                 UB = Carier(unready, UB);
             lastBlock.c.q = copyQ;
 
             return UB;
-
-
         }
 
-        private static int Schrage(UnreadyTaskQueue unready, List<Task> schrager)
+        private static int Schrage(List<Task> tasksList, List<Task> schrager)
         {
+            UnreadyTaskQueue unready = new UnreadyTaskQueue(tasksList);
             int time = unready.GetROfFirstTask();
             int finishTime = 0;
             ReadyTaskQueue ready = new ReadyTaskQueue();
+
 
             while (!unready.IsEmpty() || !ready.IsEmpty())
             {
@@ -108,12 +100,14 @@ namespace Schrage
 
             //Console.WriteLine("\nfinsh at");
             //Console.WriteLine(finishTime);
+            unready = new UnreadyTaskQueue(schrager);
+
             return finishTime;
         }
 
-        private static int SchragePodz(UnreadyTaskQueue unready)
+        private static int SchragePodz(List<Task> tasksList)
         {
-
+            UnreadyTaskQueue unready = new UnreadyTaskQueue(tasksList);
             int time = unready.GetROfFirstTask();
             int finishTime = 0;
             ReadyTaskQueue ready = new ReadyTaskQueue();

@@ -85,6 +85,17 @@ namespace Schrage
                 list.Enqueue(t.r, t);
         }
 
+        public List<Task> ToList()
+        {
+            List < Task > tasksList = new List<Task>();
+            while (!list.IsEmpty)
+                tasksList.Add(list.Dequeue());
+            list = new PriorityQueue<int, Task>();
+            foreach (Task t in tasksList)
+                list.Enqueue(t.r, t);
+            return tasksList;
+        }
+
         public void Display()
         {
             PriorityQueue<int, Task> diplayed = new PriorityQueue<int, Task>();
