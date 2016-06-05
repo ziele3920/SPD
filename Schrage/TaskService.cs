@@ -32,6 +32,7 @@ namespace Schrage
             TasksBlock block = new TasksBlock();
             block.block.Add(lastTask);
             block.b = lastTask;
+            block.c = null;
             int qb = lastTask.q;
             bool cWasFound = false;
 
@@ -65,14 +66,15 @@ namespace Schrage
             }
             if (block.a == null)
                 block.a = lastTask;
-
+            if (block.a == block.c)
+                block.c = null;
             return block;
         }
 
         public int FindMinR(TasksBlock block)
         {
             int min = int.MaxValue;
-            for (int i = block.block.IndexOf(block.c) + 1; i < block.block.IndexOf(block.b); ++i)
+            for (int i = block.block.IndexOf(block.c) + 1; i <= block.block.IndexOf(block.b); ++i)
             {
                 int currentR = block.block[i].r;
                 if (currentR < min)
@@ -84,7 +86,7 @@ namespace Schrage
         public int FindMinQ(TasksBlock block)
         {
             int min = int.MaxValue;
-            for (int i = block.block.IndexOf(block.c) + 1; i < block.block.IndexOf(block.b); ++i)
+            for (int i = block.block.IndexOf(block.c) + 1; i <= block.block.IndexOf(block.b); ++i)
             {
                 int currentQ = block.block[i].q;
                 if (currentQ < min)
@@ -96,7 +98,7 @@ namespace Schrage
         public int FindSumP(TasksBlock block)
         {
             int sum = 0;
-            for (int i = block.block.IndexOf(block.c) + 1; i < block.block.IndexOf(block.b); ++i)
+            for (int i = block.block.IndexOf(block.c) + 1; i <= block.block.IndexOf(block.b); ++i)
             {
                 sum += block.block[i].t;
             }

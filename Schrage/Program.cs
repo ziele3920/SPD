@@ -26,8 +26,9 @@ namespace Schrage
 
                 Console.WriteLine("podaj nazwe pliku");
                 string filename = Console.ReadLine();
-                List<Task> schrager = new List<Task>();
+                //string filename = "SCHRAGE6.DAT";
 
+                List<Task> schrager = new List<Task>();
 
 
                 UnreadyTaskQueue unready = new UnreadyTaskQueue(TS.ReadData(filename));
@@ -35,7 +36,8 @@ namespace Schrage
                 //unready.Display();
                 //Schrage(unready, schrager);
                 //SchragePodz(unready);
-                Carier(unready, int.MaxValue);
+                int result = Carier(unready, int.MaxValue);
+                Console.WriteLine($"Calier at {result}\n");
 
             }
         }
@@ -56,25 +58,29 @@ namespace Schrage
             pp = TS.FindSumP(lastBlock);
             qp = TS.FindMinQ(lastBlock);
 
-            lastBlock.c.r = Math.Max(lastBlock.c.r, rp + pp); //sprwadzic jak nie dziala
             int copyR = lastBlock.c.r;
+            lastBlock.c.r = Math.Max(lastBlock.c.r, rp + pp); //sprwadzic jak nie dziala
+            unready = new UnreadyTaskQueue(schrager);
+
             LB = SchragePodz(unready);
             unready = new UnreadyTaskQueue(schrager);
             if (LB < UB)
-                Carier(unready, UB);
-            unready = new UnreadyTaskQueue(schrager);
+                UB = Carier(unready, UB);
             lastBlock.c.r = copyR;
+            unready = new UnreadyTaskQueue(schrager);
 
-            lastBlock.c.q = Math.Max(lastBlock.c.q, qp + pp);
+
             int copyQ = lastBlock.c.q;
+            lastBlock.c.q = Math.Max(lastBlock.c.q, qp + pp);
+            unready = new UnreadyTaskQueue(schrager);
 
             LB = SchragePodz(unready);
             unready = new UnreadyTaskQueue(schrager);
             if (LB < UB)
-                Carier(unready, UB);
+                UB = Carier(unready, UB);
             lastBlock.c.q = copyQ;
 
-            return -1;
+            return UB;
 
 
         }
@@ -100,8 +106,8 @@ namespace Schrage
                     time = unready.GetROfFirstTask();
             }
 
-            Console.WriteLine("\nfinsh at");
-            Console.WriteLine(finishTime);
+            //Console.WriteLine("\nfinsh at");
+            //Console.WriteLine(finishTime);
             return finishTime;
         }
 
@@ -131,8 +137,8 @@ namespace Schrage
 
             }
 
-            Console.WriteLine("\nfinsh at");
-            Console.WriteLine(finishTime);
+            //Console.WriteLine("\nfinsh at");
+            //Console.WriteLine(finishTime);
             return finishTime;
             
         }
